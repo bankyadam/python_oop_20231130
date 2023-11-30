@@ -1,70 +1,39 @@
-from abc import ABC, abstractmethod
+from datetime import date
+from classes.egyagyasszoba import EgyagyasSzoba
+from classes.ketagyasszoba import KetagyasSzoba
+from classes.szalloda import Szalloda
 
+from classes.foglalaskezelo import Foglalaskezelo
 
-class Szoba(ABC):
-    @property
-    @abstractmethod
-    def ar(self) -> float:
-        pass
+szalloda = Szalloda("Hotel Imerial")
+egyagyasszoba1 = EgyagyasSzoba()
+szalloda.uj_szoba(egyagyasszoba1)
+egyagyasszoba2 = EgyagyasSzoba()
+szalloda.uj_szoba(egyagyasszoba2)
+ketagyasszoba = KetagyasSzoba()
+szalloda.uj_szoba(ketagyasszoba)
 
-    @property
-    @abstractmethod
-    def szobaszam(self) -> int:
-        pass
+foglalaskezelo = Foglalaskezelo()
 
+print("A foglalas ara: ", foglalaskezelo.foglalas(szalloda, egyagyasszoba1, date(2023, 12, 28)))
+print("A foglalas ara: ", foglalaskezelo.foglalas(szalloda, ketagyasszoba, date(2023, 12, 30)))
+print("A foglalas ara: ", foglalaskezelo.foglalas(szalloda, ketagyasszoba, date(2023, 12, 6)))
 
-class EgyagyasSzoba(Szoba):
-    def ar(self):
-        return 123.99
+try:
+    foglalaskezelo.foglalas(szalloda, ketagyasszoba, date(2020, 12, 6))
+except:
+    print("❗Csak a jovobeni datumot fogadja el")
 
-    def szobaszam(self):
-        return 1
+try:
+    foglalaskezelo.foglalas(szalloda, ketagyasszoba, date(2023, 12, 6))
+except:
+    print("❗Ezt a szobat mar lefoglaltak erre a datumra")
 
+foglalaskezelo.lemondas(szalloda, ketagyasszoba, date(2023, 12, 6))
 
-class KetagyasSzoba(Szoba):
-    def ar(self):
-        return 210.99
+try:
+    foglalaskezelo.lemondas(szalloda, ketagyasszoba, date(2023, 12, 6))
+except:
+    print("❗Nem volt ilyen foglalas")
 
-    def szobaszam(self):
-        return 2
-
-
-class Szalloda:
-    __szobak = []
-
-    def __init(self, nev):
-        self.__nev = nev
-
-    def get_nev(self):
-        return self.__nev
-
-    nev = property(get_nev)
-
-    def add_szoba(self, szoba):
-        self.__szobak.append(szoba)
-
-
-class Foglalas:
-    def __init__(self, szalloda, szoba, datum):
-        self.szalloda = szalloda
-        self.szoba = szoba
-        self.datum = datum
-
-    def ar(self):
-        return self.__szoba.ar
-
-
-class Foglalasok:
-    __foglalasok = []
-
-    def foglalas(self, foglalas):
-        self.__foglalasok.append(foglalas)
-        return foglalas.ar()
-
-    def lemondas(self, szalloda, szoba, datum):
-        for i in self.__foglalasok:
-            foglalas = self.__foglalasok[i]
-            if foglalas.szalloda == szalloda and foglalas.szoba == szoba and foglalas.datum == datum:
-                self.__foglalasok.remove(i)
-                return
-
+foglalaskezelo.listazas()
